@@ -62,7 +62,7 @@ public class extractMethodLog {
                 MethodDeclaration method_Decl = StaticJavaParser.parseMethodDeclaration(method);
                 List<String> logs = method_Decl.findAll(MethodCallExpr.class).stream()
                         .filter(mc -> mc.getScope().isPresent() &&
-                                mc.getScope().get().toString().matches(".*log.*|.*LOG.*") &&
+                                mc.getScope().get().toString().matches(".*log.*|.*LOG.*|.*Log.*") &&
                                 mc.getNameAsString().matches("info|trace|debug|warn|error|fatal"))
                         .map(MethodCallExpr::toString)
                         .collect(Collectors.toList());
@@ -92,7 +92,7 @@ public class extractMethodLog {
                             if (stmt.getExpression() instanceof MethodCallExpr) {
                                 MethodCallExpr mc = (MethodCallExpr) stmt.getExpression();
                                 return mc.getScope().isPresent() &&
-                                        mc.getScope().get().toString().matches(".*log.*|.*LOG.*") &&
+                                        mc.getScope().get().toString().matches(".*log.*|.*LOG.*|.*Log.*") &&
                                         mc.getNameAsString().matches("info|trace|debug|warn|error|fatal");
                             }
                             return false;
@@ -195,7 +195,7 @@ public class extractMethodLog {
             // 메소드 본문을 파싱하여 로그 문 추출
             MethodDeclaration methodDecl = StaticJavaParser.parseMethodDeclaration(method);
             List<MethodCallExpr> logCalls = methodDecl.findAll(MethodCallExpr.class).stream()
-                    .filter(mc -> mc.getScope().isPresent() && mc.getScope().get().toString().matches(".*log.*|.*LOG.*") &&
+                    .filter(mc -> mc.getScope().isPresent() && mc.getScope().get().toString().matches(".*log.*|.*LOG.*|.*Log.*") &&
                             mc.getNameAsString().matches("info|trace|debug|warn|error|fatal"))
                     .collect(Collectors.toList());
 
